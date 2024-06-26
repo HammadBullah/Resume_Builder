@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "257942852492",
+    "project_id": "rseume-dc971",
+    "storage_bucket": "rseume-dc971.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257942852492:android:3d69872e78baa8b9b03ca9",
+        "android_client_info": {
+          "package_name": "com.example.res"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1WzH5IBKl0XRyTzf1iDgnrdG1aOTHKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257942852492:android:5b68865e69191761b03ca9",
+        "android_client_info": {
+          "package_name": "com.example.resume"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1WzH5IBKl0XRyTzf1iDgnrdG1aOTHKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257942852492:android:c2ed3926f8d59109b03ca9",
+        "android_client_info": {
+          "package_name": "com.example.resume12"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1WzH5IBKl0XRyTzf1iDgnrdG1aOTHKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257942852492:android:ff688957b2c25454b03ca9",
+        "android_client_info": {
+          "package_name": "com.example.resume_builder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1WzH5IBKl0XRyTzf1iDgnrdG1aOTHKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257942852492:android:e907cfd5ab4e5669b03ca9",
+        "android_client_info": {
+          "package_name": "com.example.resumebuild"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW1WzH5IBKl0XRyTzf1iDgnrdG1aOTHKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
