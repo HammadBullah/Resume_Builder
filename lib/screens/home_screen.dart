@@ -28,6 +28,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home', style: TextStyle(fontFamily: 'Montserrat')),
+        backgroundColor: Color.fromARGB(255, 209, 157, 0),
         actions: [
           IconButton(
             icon: Icon(Icons.person),
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             _buildCard(context, 'Resume Builder', Icons.description, '/resume_builder'),
             _buildCard(context, 'Skill Extraction', Icons.lightbulb, '/skill_extraction'),
-            _buildCard(context, 'Interview Preparation', Icons.question_answer, '/interview_preparation'),
+            _buildCard(context, 'Interview', Icons.question_answer, '/interview_preparation'),
             _buildCard(context, 'Custom Template', Icons.edit, '/template_customization'),
           ],
         ),
@@ -62,7 +63,7 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 38, 48, 179), Color.fromARGB(255, 168, 68, 255)],
+            colors: [Color.fromARGB(255, 28, 28, 29), Color.fromARGB(255, 81, 78, 83)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),

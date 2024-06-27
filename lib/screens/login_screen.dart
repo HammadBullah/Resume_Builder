@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: _login,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary, // Use secondary color from the theme
+                backgroundColor: Color.fromARGB(255, 47, 62, 82), // Use secondary color from the theme
                 textStyle: const TextStyle(fontFamily: 'Montserrat'),
               ),
               child: const Text('Login'),

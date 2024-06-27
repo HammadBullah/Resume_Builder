@@ -61,8 +61,9 @@ class WelcomeScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         elevation: 5,
                         backgroundColor: const Color.fromARGB(255, 230, 230, 230),
+                        foregroundColor: Color.fromARGB(255, 71, 68, 81) ,
                          // Use primary color from the theme
-                        textStyle: const TextStyle(fontFamily: 'Montserrat',),
+                        textStyle: const TextStyle(fontFamily: 'Montserrat',color: Color.fromARGB(255, 215, 208, 242)),
                       ),
                       child: const Text('Sign Up'),
                     ),

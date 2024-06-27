@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import this package
+import 'package:provider/provider.dart';
 import 'package:resumebuild/screens/home_screen.dart';
 import 'package:resumebuild/screens/interview_screen.dart';
 import 'package:resumebuild/screens/login_screen.dart';
@@ -11,7 +11,8 @@ import 'package:resumebuild/screens/template_customization.dart';
 import 'package:resumebuild/screens/user_profile.dart';
 import 'package:resumebuild/screens/welcome_secreen.dart';
 import 'package:resumebuild/utils/profile_data.dart';
-import 'utils/theme.dart';
+import 'package:resumebuild/utils/resume_provider.dart';
+import 'package:resumebuild/utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +23,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => ResumeProvider()),
+      ],
       child: MaterialApp(
         title: 'Intelligent Resume Builder',
         theme: AppTheme.theme,
