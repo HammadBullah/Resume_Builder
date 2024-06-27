@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Padding(padding: EdgeInsets.all(20),
         child: Text('Home', style: TextStyle(fontFamily: 'Courier New', fontWeight: FontWeight.w700, fontSize: 30)),),
-        backgroundColor: Color.fromARGB(255, 209, 157, 0),
+        backgroundColor: Color.fromARGB(255, 224, 174, 26),
         actions: [
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
