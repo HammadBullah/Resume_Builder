@@ -1,0 +1,44 @@
+Java
+Python
+Cloud computing
+Machine learning
+Data science
+Artificial intelligence
+JavaScript
+HTML
+CSS
+React
+Angular
+Vue.js
+Node.js
+Ruby
+Rails
+PHP
+SQL
+Database administration
+Cybersecurity
+Networking
+DevOps
+Agile
+Scrum
+Kubernetes
+Docker
+AWS
+Azure
+Google Cloud
+Microsoft Office
+Excel
+Word
+PowerPoint
+Project management
+Business analysis
+UX design
+UI design
+Graphic design
+Digital marketing
+SEO
+SEM
+Social media marketing
+Content creation
+Writing
+Editing

@@ -1,0 +1,61 @@
+[
+    {
+        "label": "nltk",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "nltk",
+        "description": "nltk",
+        "detail": "nltk",
+        "documentation": {}
+    },
+    {
+        "label": "stopwords",
+        "importPath": "nltk.corpus",
+        "description": "nltk.corpus",
+        "isExtraImport": true,
+        "detail": "nltk.corpus",
+        "documentation": {}
+    },
+    {
+        "label": "word_tokenize",
+        "importPath": "nltk.tokenize",
+        "description": "nltk.tokenize",
+        "isExtraImport": true,
+        "detail": "nltk.tokenize",
+        "documentation": {}
+    },
+    {
+        "label": "sent_tokenize",
+        "importPath": "nltk.tokenize",
+        "description": "nltk.tokenize",
+        "isExtraImport": true,
+        "detail": "nltk.tokenize",
+        "documentation": {}
+    },
+    {
+        "label": "pos_tag",
+        "importPath": "nltk.tag",
+        "description": "nltk.tag",
+        "isExtraImport": true,
+        "detail": "nltk.tag",
+        "documentation": {}
+    },
+    {
+        "label": "extract_skills",
+        "kind": 2,
+        "importPath": "lib.utils.skill",
+        "description": "lib.utils.skill",
+        "peekOfCode": "def extract_skills(job_description):\n    # Tokenize sentences\n    sentences = sent_tokenize(job_description)\n    # Tokenize words and remove stopwords\n    stop_words = set(stopwords.words('english'))\n    words = [word_tokenize(sentence) for sentence in sentences]\n    words = [word for sublist in words for word in sublist if word.lower() not in stop_words]\n    # Part-of-speech tagging\n    tagged_words = pos_tag(words)\n    # Extract skills (no longer limited to singular nouns)",
+        "detail": "lib.utils.skill",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "lib.utils.skill",
+        "description": "lib.utils.skill",
+        "peekOfCode": "def main():\n    while True:\n        # Read job description from stdin\n        input_line = input(\"Job description: \")\n        if not input_line:\n            break\n        # Extract skills\n        suggested_skills = extract_skills(input_line)\n        # Output skills\n        print(suggested_skills)",
+        "detail": "lib.utils.skill",
+        "documentation": {}
+    }
+]

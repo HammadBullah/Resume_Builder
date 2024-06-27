@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => ResumeProvider()),
+        ChangeNotifierProvider(create: (context) => SkillExtractionProvider()),
       ],
       child: MaterialApp(
         title: 'Intelligent Resume Builder',
