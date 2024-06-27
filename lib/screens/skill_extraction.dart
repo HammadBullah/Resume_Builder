@@ -37,7 +37,7 @@ class SkillExtractionProvider with ChangeNotifier {
       'aws',
       'azure',
       'google cloud',
-      'machine learning',
+      'machine-learning',
       'artificial intelligence',
       'data science',
       'data analysis',
@@ -46,6 +46,7 @@ class SkillExtractionProvider with ChangeNotifier {
       'mathematics',
       'c++',
       'c#',
+      'c'
       'swift',
       'kotlin',
       'ruby',

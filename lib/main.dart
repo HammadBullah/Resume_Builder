@@ -11,7 +11,6 @@ import 'package:resumebuild/screens/template_customization.dart';
 import 'package:resumebuild/screens/user_profile.dart';
 import 'package:resumebuild/screens/welcome_secreen.dart';
 import 'package:resumebuild/utils/profile_data.dart';
-import 'package:resumebuild/utils/resume_provider.dart';
 import 'package:resumebuild/utils/theme.dart';
 
 void main() async {
@@ -26,7 +25,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
-        ChangeNotifierProvider(create: (context) => ResumeProvider()),
         ChangeNotifierProvider(create: (context) => SkillExtractionProvider()),
       ],
       child: MaterialApp(

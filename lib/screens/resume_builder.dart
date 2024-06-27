@@ -1,358 +1,464 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:resumebuild/utils/resume_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'dart:async';
 
-class ResumeBuilderScreen extends StatelessWidget {
-  const ResumeBuilderScreen({Key? key}) : super(key: key);
+import 'package:resumebuild/utils/theme.dart';
+
+class ResumeBuilderScreen extends StatefulWidget {
+  @override
+  _ResumeBuilderScreenState createState() => _ResumeBuilderScreenState();
+}
+
+class _ResumeBuilderScreenState extends State<ResumeBuilderScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _fullName, _email, _phoneNumber, _address;
+  String? _professionalSummary;
+  List<Experience> _experience = [];
+  List<Education> _education = [];
+  List<String> _skills = [];
+  List<String> _certifications = [];
+  List<String> _projects = [];
 
   @override
   Widget build(BuildContext context) {
-    final resumeProvider = Provider.of<ResumeProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Resume Builder', style: TextStyle(fontFamily: 'Montserrat')),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              resumeProvider.saveResumeData();
-            },
-          ),
-        ],
+        title: Text('Resume Builder'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
             children: [
-              _buildSectionTitle('Personal Information'),
-              _buildTextField('Full Name', resumeProvider, 'personal_info', 'full_name'),
-              _buildTextField('Email', resumeProvider, 'personal_info', 'email'),
-              _buildTextField('Phone Number', resumeProvider, 'personal_info', 'phone_number'),
-              _buildTextField('Address', resumeProvider, 'personal_info', 'address'),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Professional Summary'),
-              _buildTextField('Summary', resumeProvider, 'professional_summary'),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Experience'),
-              ..._buildExperienceFields(context, resumeProvider),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Full Name'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your full name';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _fullName = value!,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: (value) {
+                  if (value!.isEmpty || value.contains('@')) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _email = value,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Phone Number'),
+                validator: (value) {
+                  if (value!.isEmpty || value.length < 10) {
+                    return 'Please enter a valid phone number';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _phoneNumber = value,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Address'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your address';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _address = value,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Professional Summary'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your professional summary';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _professionalSummary = value,
+              ),
+              SizedBox(height: 20),
+              Text('Experience:'),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _experience.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Column(
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Work Type'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your work type';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _experience[index].workType = value!,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Work Beginning Date'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your work beginning date';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _experience[index].beginDate = value!,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Work End Date'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your work end date';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _experience[index].endDate = value!,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Work Description'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your work description';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _experience[index].description = value!,
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _experience.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
               ElevatedButton(
+                child: Text('Add Experience'),
                 onPressed: () {
-                  resumeProvider.addToList('experience', {
-                    'job_title': '',
-                    'company': '',
-                    'duration': '',
-                    'job_description': '',
+                  setState(() {
+                    _experience.add(Experience());
                   });
                 },
-                child: const Text('Add Another Experience', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Education'),
-              ..._buildEducationFields(context, resumeProvider),
+              SizedBox(height: 20),
+              Text('Education:'),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _education.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Column(
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'School/Campus'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your school/campus';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _education[index].school = value!,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Area of Study'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your area of study';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _education[index].areaOfStudy = value!,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Marks'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your marks';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _education[index].marks = value!,
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _education.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
               ElevatedButton(
+                child: Text('Add Education'),
                 onPressed: () {
-                  resumeProvider.addToList('education', {
-                    'degree': '',
-                    'institution': '',
-                    'duration': '',
-                    'description': '',
+                  setState(() {
+                    _education.add(Education());
                   });
                 },
-                child: const Text('Add Another Education', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Skills'),
-              ..._buildSkillsFields(context, resumeProvider),
-              ElevatedButton(
-                onPressed: () {
-                  resumeProvider.addToList('skills', '');
+              SizedBox(height: 20),
+              Text('Skills:'),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _skills.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: TextFormField(
+                      decoration: InputDecoration(labelText: 'Skill $index'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your skill';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _skills[index] = value!,
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _skills.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
                 },
-                child: const Text('Add Another Skill', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Certifications'),
-              ..._buildCertificationsFields(context, resumeProvider),
               ElevatedButton(
+                child: Text('Add Skill'),
                 onPressed: () {
-                  resumeProvider.addToList('certifications', {
-                    'name': '',
-                    'organization': '',
-                    'date': '',
+                  setState(() {
+                    _skills.add('');
                   });
                 },
-                child: const Text('Add Another Certification', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Projects'),
-              ..._buildProjectsFields(context, resumeProvider),
+              SizedBox(height: 20),
+              Text('Certifications:'),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _certifications.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: TextFormField(
+                      decoration: InputDecoration(labelText: 'Certification $index'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your certification';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _certifications[index] = value!,
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _certifications.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
               ElevatedButton(
+                child: Text('Add Certification'),
                 onPressed: () {
-                  resumeProvider.addToList('projects', {
-                    'name': '',
-                    'description': '',
-                    'technologies': '',
+                  setState(() {
+                    _certifications.add('');
                   });
                 },
-                child: const Text('Add Another Project', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Resume Preview'),
-              Container(
-                height: 200,
-                color: Colors.grey[200],
-                child: const Center(child: Text('Resume Preview Area')),
-              ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Resume Scoring'),
-              ElevatedButton(
-                onPressed: () {
-                  // Upload resume for scoring
+              SizedBox(height: 20),
+              Text('Projects:'),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _projects.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: TextFormField(
+                      decoration: InputDecoration(labelText: 'Project $index'),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your project';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _projects[index] = value!,
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove),
+                      onPressed: () {
+                        setState(() {
+                          _projects.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
                 },
-                child: const Text('Upload Resume', style: TextStyle(fontFamily: 'Montserrat')),
               ),
-              const SizedBox(height: 20),
-              const Text('Score: 85%', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
-              const SizedBox(height: 20),
-              const Text('Suggestions for Improvement', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
-              const Text('1. Improve Summary', style: TextStyle(fontFamily: 'Montserrat')),
-              const Text('2. Add More Skills', style: TextStyle(fontFamily: 'Montserrat')),
+              ElevatedButton(
+                child: Text('Add Project'),
+                onPressed: () {
+                  setState(() {
+                    _projects.add('');
+                  });
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                child: Text('Generate Resume'),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    final pdf = pw.Document();
+                    pdf.addPage(pw.MultiPage(
+                      build: (pw.Context context) {
+                        return [
+                          pw.Center(
+                            child: pw.Text(
+                              'Resume',
+                              style: pw.TextStyle(fontSize: 24),
+                            ),
+                          ),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Full Name: $_fullName'),
+                          pw.Text('Email: $_email'),
+                          pw.Text('Phone Number: $_phoneNumber'),
+                          pw.Text('Address: $_address'),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Professional Summary:'),
+                          pw.Text(_professionalSummary?? ''),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Experience:'),
+                         ..._experience.map((experience) {
+                            return pw.Column(
+                              children: [
+                                pw.Text('Work Type: ${experience.workType}'),
+                                pw.Text('Work Beginning Date:${experience.beginDate}'),
+                                pw.Text('Work End Date: ${experience.endDate}'),
+                                pw.Text('Work Description: ${experience.description}'),
+                              ],
+                            );
+                          }),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Education:'),
+                        ..._education.map((education) {
+                            return pw.Column(
+                              children: [
+                                pw.Text('School/Campus: ${education.school}'),
+                                pw.Text('Area of Study: ${education.areaOfStudy}'),
+                                pw.Text('Marks: ${education.marks}'),
+                              ],
+                            );
+                          }),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Skills:'),
+                        ..._skills.map((skill) => pw.Text(skill)),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Certifications:'),
+                        ..._certifications.map((certification) => pw.Text(certification)),
+                          pw.SizedBox(height: 20),
+                          pw.Text('Projects:'),
+                        ..._projects.map((project) => pw.Text(project)),
+                        ];
+                      },
+                    ));
+                    final directory = await getApplicationDocumentsDirectory();
+                    final file = File('${directory.path}/resume.pdf');
+                    await file.writeAsBytes(await pdf.save());
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Resume generated successfully!'),
+                      ),
+                    );
+                  }
+                },
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontFamily: 'Montserrat', fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-    );
+
+class Experience {
+  String? workType;
+  String? beginDate;
+  String? endDate;
+  String? description;
+}
+
+class Education {
+  String? school;
+  String? areaOfStudy;
+  String? marks;
+}
+
+  
+class ResumeScoring {
+  static const int MAX_SCORE = 8;
+
+  int calculateScore(Resume resume) {
+    int score = 0;
+    if (resume.fullName!.isNotEmpty) score++;
+    if (resume.email!.isNotEmpty) score++;
+    if (resume.phoneNumber!.isNotEmpty) score++;
+    if (resume.address!.isNotEmpty) score++;
+    if (resume.professionalSummary!.isNotEmpty) score++;
+    if (resume.experience!.length > 0) score++;
+    if (resume.education!.length > 0) score++;
+    if (resume.skills!.length > 0) score++;
+    if (resume.certifications!.length > 0) score++;
+    if (resume.projects!.length > 0) score++;
+    return score;
   }
 
-  Widget _buildTextField(String label, ResumeProvider resumeProvider, String section, [String? field]) {
-    TextEditingController controller = TextEditingController(
-      text: field == null ? resumeProvider.resumeData[section] ?? '' : resumeProvider.resumeData[section]?[field] ?? '',
-    );
-
-    // Ensure controller is updated with the latest text value
-    controller.text = field == null ? resumeProvider.resumeData[section] ?? '' : resumeProvider.resumeData[section]?[field] ?? '';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
-        const SizedBox(height: 5),
-        TextField(
-          controller: controller,
-          onChanged: (value) {
-            if (field == null) {
-              resumeProvider.updateSection(section, value);
-            } else {
-              resumeProvider.updateFieldInSection(section, field, value); // Implement this method in ResumeProvider
-            }
-          },
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-
-  List<Widget> _buildExperienceFields(BuildContext context, ResumeProvider resumeProvider) {
-    List<Widget> experienceFields = [];
-    for (int i = 0; i < resumeProvider.resumeData['experience'].length; i++) {
-      var item = resumeProvider.resumeData['experience'][i];
-      experienceFields.addAll([
-        _buildExperienceField('Job Title', resumeProvider, 'experience', 'job_title$i'),
-        _buildExperienceField('Company', resumeProvider, 'experience', 'company$i'),
-        _buildExperienceField('Duration', resumeProvider, 'experience', 'duration$i'),
-        _buildExperienceField('Job Description', resumeProvider, 'experience', 'job_description$i'),
-        ElevatedButton(
-          onPressed: () {
-            resumeProvider.removeFromList('experience', i);
-          },
-          child: const Text('Remove Experience', style: TextStyle(fontFamily: 'Montserrat')),
-        ),
-        const SizedBox(height: 20),
-      ]);
+  String getScoreText(int score) {
+    if (score < MAX_SCORE / 2) {
+      return 'Weak';
+    } else if (score < MAX_SCORE * 3 / 4) {
+      return 'Average';
+    } else {
+      return 'Strong';
     }
-    return experienceFields;
   }
-
-  Widget _buildExperienceField(String label, ResumeProvider resumeProvider, String section, String field) {
-    TextEditingController controller = TextEditingController(
-      text: resumeProvider.resumeData[section][field] ?? '',
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
-        const SizedBox(height: 5),
-        TextField(
-          controller: controller,
-          onChanged: (value) {
-            resumeProvider.updateFieldInSection(section, field, value);
-          },
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-
-  List<Widget> _buildEducationFields(BuildContext context, ResumeProvider resumeProvider) {
-    List<Widget> educationFields = [];
-    for (int i = 0; i < resumeProvider.resumeData['education'].length; i++) {
-      var item = resumeProvider.resumeData['education'][i];
-      educationFields.addAll([
-        _buildEducationField('Degree', resumeProvider, 'education', 'degree$i'),
-        _buildEducationField('Institution', resumeProvider, 'education', 'institution$i'),
-        _buildEducationField('Duration', resumeProvider, 'education', 'duration$i'),
-        _buildEducationField('Description', resumeProvider, 'education', 'description$i'),
-        ElevatedButton(
-          onPressed: () {
-            resumeProvider.removeFromList('education', i);
-          },
-          child: const Text('Remove Education', style: TextStyle(fontFamily: 'Montserrat')),
-        ),
-        const SizedBox(height: 20),
-      ]);
-    }
-    return educationFields;
-  }
-
-  Widget _buildEducationField(String label, ResumeProvider resumeProvider, String section, String field) {
-    TextEditingController controller = TextEditingController(
-      text: resumeProvider.resumeData[section][field] ?? '',
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
-        const SizedBox(height: 5),
-        TextField(
-          controller: controller,
-          onChanged: (value) {
-            resumeProvider.updateFieldInSection(section, field, value);
-          },
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-
-  List<Widget> _buildSkillsFields(BuildContext context, ResumeProvider resumeProvider) {
-    List<Widget> skillsFields = [];
-    for (int i = 0; i < resumeProvider.resumeData['skills'].length; i++) {
-      TextEditingController controller = TextEditingController(text: resumeProvider.resumeData['skills'][i]);
-      skillsFields.add(
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                onChanged: (value) {
-                  resumeProvider.resumeData['skills'][i] = value;
-                  resumeProvider.notifyListeners();
-                },
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                resumeProvider.removeFromList('skills', i);
-},
-iconSize: 20,
-),
-],
-),
-);
-}
-return skillsFields;
 }
 
-List<Widget> _buildCertificationsFields(BuildContext context, ResumeProvider resumeProvider) {
-List<Widget> certificationsFields = [];
-for (int i = 0; i < resumeProvider.resumeData['certifications'].length; i++) {
-var item = resumeProvider.resumeData['certifications'][i];
-certificationsFields.addAll([
-_buildCertificationField('Name', resumeProvider, 'certifications', 'name$i'),
-_buildCertificationField('Organization', resumeProvider, 'certifications', 'organization$i'),
-_buildCertificationField('Date', resumeProvider, 'certifications', 'date$i'),
-ElevatedButton(
-onPressed: () {
-resumeProvider.removeFromList('certifications', i);
-},
-child: const Text('Remove Certification', style: TextStyle(fontFamily: 'Montserrat')),
-),
-const SizedBox(height: 20),
-]);
-}
-return certificationsFields;
-}
-
-Widget _buildCertificationField(String label, ResumeProvider resumeProvider, String section, String field) {
-TextEditingController controller = TextEditingController(
-text: resumeProvider.resumeData[section][field] ?? '',
-);
-return Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
-const SizedBox(height: 5),
-TextField(
-controller: controller,
-onChanged: (value) {
-resumeProvider.updateFieldInSection(section, field, value);
-},
-),
-const SizedBox(height: 10),
-],
-);
-}
-
-List<Widget> _buildProjectsFields(BuildContext context, ResumeProvider resumeProvider) {
-List<Widget> projectsFields = [];
-for (int i = 0; i < resumeProvider.resumeData['projects'].length; i++) {
-var item = resumeProvider.resumeData['projects'][i];
-projectsFields.addAll([
-_buildProjectField('Name', resumeProvider, 'projects', 'name$i'),
-_buildProjectField('Description', resumeProvider, 'projects', 'description$i'),
-_buildProjectField('Technologies', resumeProvider, 'projects', 'technologies$i'),
-ElevatedButton(
-onPressed: () {
-resumeProvider.removeFromList('projects', i);
-},
-child: const Text('Remove Project', style: TextStyle(fontFamily: 'Montserrat')),
-),
-const SizedBox(height: 20),
-]);
-}
-return projectsFields;
-}
-
-Widget _buildProjectField(String label, ResumeProvider resumeProvider, String section, String field) {
-TextEditingController controller = TextEditingController(
-text: resumeProvider.resumeData[section][field] ?? '',
-);
-return Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
-const SizedBox(height: 5),
-TextField(
-controller: controller,
-onChanged: (value) {
-resumeProvider.updateFieldInSection(section, field, value);
-},
-),
-const SizedBox(height: 10),
-],
-);
-}
+class Resume {
+  String? fullName;
+  String? email;
+  String? phoneNumber;
+  String? address;
+  String? professionalSummary;
+  List<String>? experience;
+  List<String>? education;
+  List<String>? skills;
+  List<String>? certifications;
+  List<String>? projects;
 }
