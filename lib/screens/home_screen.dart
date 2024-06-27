@@ -27,16 +27,21 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home', style: TextStyle(fontFamily: 'Montserrat')),
+        automaticallyImplyLeading: false,
+        title: const Padding(padding: EdgeInsets.all(20),
+        child: Text('Home', style: TextStyle(fontFamily: 'Courier New', fontWeight: FontWeight.w700, fontSize: 30)),),
         backgroundColor: Color.fromARGB(255, 209, 157, 0),
         actions: [
-          IconButton(
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: IconButton(
             icon: Icon(Icons.person),
+
             onPressed: () {
               _showProfileMenu(context); // Show profile menu on tap
             },
           ),
-        ],
+        )],
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),

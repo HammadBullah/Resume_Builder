@@ -27,8 +27,8 @@ class _ResumeBuilderScreenState extends State<ResumeBuilderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resume Builder'),
-      ),
+       title: Text('Resume Builder', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor:  Color.fromARGB(255, 209, 157, 0),),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
