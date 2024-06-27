@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resumebuild/utils/resume_provider.dart';
 
 class ResumeBuilderScreen extends StatelessWidget {
-  const ResumeBuilderScreen({super.key});
+  const ResumeBuilderScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,31 +25,8 @@ class ResumeBuilderScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add a new section
-                    },
-                    child: const Text('Add Section', style: TextStyle(fontFamily: 'Montserrat')),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      resumeProvider.saveResumeData();
-                    },
-                    child: const Text('Save', style: TextStyle(fontFamily: 'Montserrat')),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Download the resume
-                    },
-                    child: const Text('Download', style: TextStyle(fontFamily: 'Montserrat')),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
               _buildSectionTitle('Personal Information'),
               _buildTextField('Full Name', resumeProvider, 'personal_info', 'full_name'),
               _buildTextField('Email', resumeProvider, 'personal_info', 'email'),
@@ -60,25 +37,35 @@ class ResumeBuilderScreen extends StatelessWidget {
               _buildTextField('Summary', resumeProvider, 'professional_summary'),
               const SizedBox(height: 20),
               _buildSectionTitle('Experience'),
-              ..._buildExperienceFields(resumeProvider),
+              ..._buildExperienceFields(context, resumeProvider),
               ElevatedButton(
                 onPressed: () {
-                  resumeProvider.addToList('experience', {});
+                  resumeProvider.addToList('experience', {
+                    'job_title': '',
+                    'company': '',
+                    'duration': '',
+                    'job_description': '',
+                  });
                 },
                 child: const Text('Add Another Experience', style: TextStyle(fontFamily: 'Montserrat')),
               ),
               const SizedBox(height: 20),
               _buildSectionTitle('Education'),
-              ..._buildEducationFields(resumeProvider),
+              ..._buildEducationFields(context, resumeProvider),
               ElevatedButton(
                 onPressed: () {
-                  resumeProvider.addToList('education', {});
+                  resumeProvider.addToList('education', {
+                    'degree': '',
+                    'institution': '',
+                    'duration': '',
+                    'description': '',
+                  });
                 },
                 child: const Text('Add Another Education', style: TextStyle(fontFamily: 'Montserrat')),
               ),
               const SizedBox(height: 20),
               _buildSectionTitle('Skills'),
-              ..._buildSkillsFields(resumeProvider),
+              ..._buildSkillsFields(context, resumeProvider),
               ElevatedButton(
                 onPressed: () {
                   resumeProvider.addToList('skills', '');
@@ -87,19 +74,27 @@ class ResumeBuilderScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _buildSectionTitle('Certifications'),
-              ..._buildCertificationsFields(resumeProvider),
+              ..._buildCertificationsFields(context, resumeProvider),
               ElevatedButton(
                 onPressed: () {
-                  resumeProvider.addToList('certifications', {});
+                  resumeProvider.addToList('certifications', {
+                    'name': '',
+                    'organization': '',
+                    'date': '',
+                  });
                 },
                 child: const Text('Add Another Certification', style: TextStyle(fontFamily: 'Montserrat')),
               ),
               const SizedBox(height: 20),
               _buildSectionTitle('Projects'),
-              ..._buildProjectsFields(resumeProvider),
+              ..._buildProjectsFields(context, resumeProvider),
               ElevatedButton(
                 onPressed: () {
-                  resumeProvider.addToList('projects', {});
+                  resumeProvider.addToList('projects', {
+                    'name': '',
+                    'description': '',
+                    'technologies': '',
+                  });
                 },
                 child: const Text('Add Another Project', style: TextStyle(fontFamily: 'Montserrat')),
               ),
@@ -132,13 +127,23 @@ class ResumeBuilderScreen extends StatelessWidget {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 16, fontWeight: FontWeight.bold));
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(fontFamily: 'Montserrat', fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   Widget _buildTextField(String label, ResumeProvider resumeProvider, String section, [String? field]) {
     TextEditingController controller = TextEditingController(
-      text: field == null ? resumeProvider.resumeData[section] : resumeProvider.resumeData[section][field],
+      text: field == null ? resumeProvider.resumeData[section] ?? '' : resumeProvider.resumeData[section]?[field] ?? '',
     );
+
+    // Ensure controller is updated with the latest text value
+    controller.text = field == null ? resumeProvider.resumeData[section] ?? '' : resumeProvider.resumeData[section]?[field] ?? '';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,8 +155,7 @@ class ResumeBuilderScreen extends StatelessWidget {
             if (field == null) {
               resumeProvider.updateSection(section, value);
             } else {
-              resumeProvider.resumeData[section][field] = value;
-              resumeProvider.notifyListeners();
+              resumeProvider.updateFieldInSection(section, field, value); // Implement this method in ResumeProvider
             }
           },
         ),
@@ -160,45 +164,89 @@ class ResumeBuilderScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildExperienceFields(ResumeProvider resumeProvider) {
+  List<Widget> _buildExperienceFields(BuildContext context, ResumeProvider resumeProvider) {
     List<Widget> experienceFields = [];
     for (int i = 0; i < resumeProvider.resumeData['experience'].length; i++) {
+      var item = resumeProvider.resumeData['experience'][i];
       experienceFields.addAll([
-        _buildTextField('Job Title', resumeProvider, 'experience', '$i.job_title'),
-        _buildTextField('Company', resumeProvider, 'experience', '$i.company'),
-        _buildTextField('Duration', resumeProvider, 'experience', '$i.duration'),
-        _buildTextField('Job Description', resumeProvider, 'experience', '$i.job_description'),
+        _buildExperienceField('Job Title', resumeProvider, 'experience', 'job_title$i'),
+        _buildExperienceField('Company', resumeProvider, 'experience', 'company$i'),
+        _buildExperienceField('Duration', resumeProvider, 'experience', 'duration$i'),
+        _buildExperienceField('Job Description', resumeProvider, 'experience', 'job_description$i'),
         ElevatedButton(
           onPressed: () {
             resumeProvider.removeFromList('experience', i);
           },
           child: const Text('Remove Experience', style: TextStyle(fontFamily: 'Montserrat')),
         ),
+        const SizedBox(height: 20),
       ]);
     }
     return experienceFields;
   }
 
-  List<Widget> _buildEducationFields(ResumeProvider resumeProvider) {
+  Widget _buildExperienceField(String label, ResumeProvider resumeProvider, String section, String field) {
+    TextEditingController controller = TextEditingController(
+      text: resumeProvider.resumeData[section][field] ?? '',
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
+        const SizedBox(height: 5),
+        TextField(
+          controller: controller,
+          onChanged: (value) {
+            resumeProvider.updateFieldInSection(section, field, value);
+          },
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+
+  List<Widget> _buildEducationFields(BuildContext context, ResumeProvider resumeProvider) {
     List<Widget> educationFields = [];
     for (int i = 0; i < resumeProvider.resumeData['education'].length; i++) {
+      var item = resumeProvider.resumeData['education'][i];
       educationFields.addAll([
-        _buildTextField('Degree', resumeProvider, 'education', '$i.degree'),
-        _buildTextField('Institution', resumeProvider, 'education', '$i.institution'),
-        _buildTextField('Duration', resumeProvider, 'education', '$i.duration'),
-        _buildTextField('Description', resumeProvider, 'education', '$i.description'),
+        _buildEducationField('Degree', resumeProvider, 'education', 'degree$i'),
+        _buildEducationField('Institution', resumeProvider, 'education', 'institution$i'),
+        _buildEducationField('Duration', resumeProvider, 'education', 'duration$i'),
+        _buildEducationField('Description', resumeProvider, 'education', 'description$i'),
         ElevatedButton(
           onPressed: () {
             resumeProvider.removeFromList('education', i);
           },
           child: const Text('Remove Education', style: TextStyle(fontFamily: 'Montserrat')),
         ),
+        const SizedBox(height: 20),
       ]);
     }
     return educationFields;
   }
 
-  List<Widget> _buildSkillsFields(ResumeProvider resumeProvider) {
+  Widget _buildEducationField(String label, ResumeProvider resumeProvider, String section, String field) {
+    TextEditingController controller = TextEditingController(
+      text: resumeProvider.resumeData[section][field] ?? '',
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
+        const SizedBox(height: 5),
+        TextField(
+          controller: controller,
+          onChanged: (value) {
+            resumeProvider.updateFieldInSection(section, field, value);
+          },
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+
+  List<Widget> _buildSkillsFields(BuildContext context, ResumeProvider resumeProvider) {
     List<Widget> skillsFields = [];
     for (int i = 0; i < resumeProvider.resumeData['skills'].length; i++) {
       TextEditingController controller = TextEditingController(text: resumeProvider.resumeData['skills'][i]);
@@ -218,48 +266,93 @@ class ResumeBuilderScreen extends StatelessWidget {
               icon: Icon(Icons.delete),
               onPressed: () {
                 resumeProvider.removeFromList('skills', i);
-              },
-            ),
-          ],
-        ),
-      );
-    }
-    return skillsFields;
-  }
+},
+iconSize: 20,
+),
+],
+),
+);
+}
+return skillsFields;
+}
 
-  List<Widget> _buildCertificationsFields(ResumeProvider resumeProvider) {
-    List<Widget> certificationsFields = [];
-    for (int i = 0; i < resumeProvider.resumeData['certifications'].length; i++) {
-      certificationsFields.addAll([
-        _buildTextField('Certification Name', resumeProvider, 'certifications', '$i.name'),
-        _buildTextField('Issuing Organization', resumeProvider, 'certifications', '$i.organization'),
-        _buildTextField('Date Obtained', resumeProvider, 'certifications', '$i.date'),
-        ElevatedButton(
-          onPressed: () {
-            resumeProvider.removeFromList('certifications', i);
-          },
-          child: const Text('Remove Certification', style: TextStyle(fontFamily: 'Montserrat')),
-        ),
-      ]);
-    }
-    return certificationsFields;
-  }
+List<Widget> _buildCertificationsFields(BuildContext context, ResumeProvider resumeProvider) {
+List<Widget> certificationsFields = [];
+for (int i = 0; i < resumeProvider.resumeData['certifications'].length; i++) {
+var item = resumeProvider.resumeData['certifications'][i];
+certificationsFields.addAll([
+_buildCertificationField('Name', resumeProvider, 'certifications', 'name$i'),
+_buildCertificationField('Organization', resumeProvider, 'certifications', 'organization$i'),
+_buildCertificationField('Date', resumeProvider, 'certifications', 'date$i'),
+ElevatedButton(
+onPressed: () {
+resumeProvider.removeFromList('certifications', i);
+},
+child: const Text('Remove Certification', style: TextStyle(fontFamily: 'Montserrat')),
+),
+const SizedBox(height: 20),
+]);
+}
+return certificationsFields;
+}
 
-  List<Widget> _buildProjectsFields(ResumeProvider resumeProvider) {
-    List<Widget> projectsFields = [];
-    for (int i = 0; i < resumeProvider.resumeData['projects'].length; i++) {
-      projectsFields.addAll([
-        _buildTextField('Project Name', resumeProvider, 'projects', '$i.name'),
-        _buildTextField('Description', resumeProvider, 'projects', '$i.description'),
-        _buildTextField('Technologies Used', resumeProvider, 'projects', '$i.technologies'),
-        ElevatedButton(
-          onPressed: () {
-            resumeProvider.removeFromList('projects', i);
-          },
-          child: const Text('Remove Project', style: TextStyle(fontFamily: 'Montserrat')),
-        ),
-      ]);
-    }
-    return projectsFields;
-  }
+Widget _buildCertificationField(String label, ResumeProvider resumeProvider, String section, String field) {
+TextEditingController controller = TextEditingController(
+text: resumeProvider.resumeData[section][field] ?? '',
+);
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
+const SizedBox(height: 5),
+TextField(
+controller: controller,
+onChanged: (value) {
+resumeProvider.updateFieldInSection(section, field, value);
+},
+),
+const SizedBox(height: 10),
+],
+);
+}
+
+List<Widget> _buildProjectsFields(BuildContext context, ResumeProvider resumeProvider) {
+List<Widget> projectsFields = [];
+for (int i = 0; i < resumeProvider.resumeData['projects'].length; i++) {
+var item = resumeProvider.resumeData['projects'][i];
+projectsFields.addAll([
+_buildProjectField('Name', resumeProvider, 'projects', 'name$i'),
+_buildProjectField('Description', resumeProvider, 'projects', 'description$i'),
+_buildProjectField('Technologies', resumeProvider, 'projects', 'technologies$i'),
+ElevatedButton(
+onPressed: () {
+resumeProvider.removeFromList('projects', i);
+},
+child: const Text('Remove Project', style: TextStyle(fontFamily: 'Montserrat')),
+),
+const SizedBox(height: 20),
+]);
+}
+return projectsFields;
+}
+
+Widget _buildProjectField(String label, ResumeProvider resumeProvider, String section, String field) {
+TextEditingController controller = TextEditingController(
+text: resumeProvider.resumeData[section][field] ?? '',
+);
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(label, style: const TextStyle(fontFamily: 'Montserrat', fontSize: 14)),
+const SizedBox(height: 5),
+TextField(
+controller: controller,
+onChanged: (value) {
+resumeProvider.updateFieldInSection(section, field, value);
+},
+),
+const SizedBox(height: 10),
+],
+);
+}
 }

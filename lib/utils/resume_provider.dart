@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
-class ResumeProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Map<String, dynamic> resumeData = {
-    'personal_info': {},
+class ResumeProvider extends ChangeNotifier {
+  Map<String, dynamic> _resumeData = {
+    'personal_info': {
+      'full_name': '',
+      'email': '',
+      'phone_number': '',
+      'address': '',
+    },
     'professional_summary': '',
     'experience': [],
     'education': [],
@@ -16,47 +16,45 @@ class ResumeProvider with ChangeNotifier {
     'projects': [],
   };
 
-  Future<void> fetchResumeData() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      DocumentSnapshot doc = await _firestore.collection('resumes').doc(user.uid).get();
-      if (doc.exists) {
-        resumeData = doc.data() as Map<String, dynamic>;
-        notifyListeners();
-      }
-    }
-  }
+  // Getter for resumeData
+  Map<String, dynamic> get resumeData => _resumeData;
 
-  Future<void> saveResumeData() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      await _firestore.collection('resumes').doc(user.uid).set(resumeData);
-    }
-  }
-
+  // Update a section in resumeData
   void updateSection(String section, dynamic value) {
-    resumeData[section] = value;
-    notifyListeners();
-  }
-
-  void addToList(String section, dynamic value) {
-    if (resumeData[section] is List) {
-      resumeData[section].add(value);
+    if (_resumeData.containsKey(section)) {
+      _resumeData[section] = value;
       notifyListeners();
     }
   }
 
+  // Update a field within a section in resumeData
+  void updateFieldInSection(String section, String field, String value) {
+    if (_resumeData.containsKey(section) && _resumeData[section] is Map<String, dynamic>) {
+      _resumeData[section][field] = value;
+      notifyListeners();
+    }
+  }
+
+  // Add an item to a list in resumeData
+  void addToList(String section, dynamic item) {
+    if (_resumeData.containsKey(section) && _resumeData[section] is List<dynamic>) {
+      _resumeData[section].add(item);
+      notifyListeners();
+    }
+  }
+
+  // Remove an item from a list in resumeData
   void removeFromList(String section, int index) {
-    if (resumeData[section] is List) {
-      resumeData[section].removeAt(index);
+    if (_resumeData.containsKey(section) && _resumeData[section] is List<dynamic>) {
+      _resumeData[section].removeAt(index);
       notifyListeners();
     }
   }
 
-  void updateListItem(String section, int index, dynamic value) {
-    if (resumeData[section] is List) {
-      resumeData[section][index] = value;
-      notifyListeners();
-    }
+  // Save resume data (dummy method)
+  void saveResumeData() {
+    // Here you can implement logic to save data to a database or storage
+    print('Saving resume data...');
+    // Example: Firestore.instance.collection('resumes').doc(userId).set(_resumeData);
   }
 }
