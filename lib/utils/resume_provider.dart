@@ -1,24 +1,7 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
-class Education {
-  final String course;
-  final String school;
-  final String yearEnded;
-
-  Education({required this.course, required this.school, required this.yearEnded});
-}
-
-class Experience {
-  final String jobName;
-  final String summary;
-  final String startDate;
-  final String endDate;
-
-  Experience({required this.jobName, required this.summary, required this.startDate, required this.endDate});
-}
-
-class ResumeProvider with ChangeNotifier {
+class ResumeProvider extends ChangeNotifier {
   String name = '';
   String title = '';
   String summary = '';
@@ -29,30 +12,36 @@ class ResumeProvider with ChangeNotifier {
   List<Experience> experienceList = [];
   List<String> skills = [];
   List<String> languages = [];
-  Uint8List? photo;
+  File? image; // Add this line for the image
 
-  void addEducation(Education education) {
-    educationList.add(education);
+  void setImage(File image) {
+    this.image = image;
     notifyListeners();
   }
+}
 
-  void addExperience(Experience experience) {
-    experienceList.add(experience);
-    notifyListeners();
-  }
+class Education {
+  final String course;
+  final String school;
+  final String yearEnded;
 
-  void addSkill(String skill) {
-    skills.add(skill);
-    notifyListeners();
-  }
+  Education({
+    required this.course,
+    required this.school,
+    required this.yearEnded,
+  });
+}
 
-  void addLanguage(String language) {
-    languages.add(language);
-    notifyListeners();
-  }
+class Experience {
+  final String jobName;
+  final String summary;
+  final String startDate;
+  final String endDate;
 
-  void setPhoto(Uint8List? newPhoto) {
-    photo = newPhoto;
-    notifyListeners();
-  }
+  Experience({
+    required this.jobName,
+    required this.summary,
+    required this.startDate,
+    required this.endDate,
+  });
 }

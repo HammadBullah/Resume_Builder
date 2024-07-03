@@ -1,8 +1,6 @@
-import 'dart:ui';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -17,6 +15,13 @@ class ResumeFormScreen extends StatefulWidget {
 }
 
 class _ResumeFormScreenState extends State<ResumeFormScreen> {
+  Future<void> _pickImage(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      context.read<ResumeProvider>().setImage(File(pickedFile.path));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +43,29 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Consumer<ResumeProvider>(
+                builder: (context, provider, child) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        provider.image != null
+                          ? CircleAvatar(
+                              radius: 50,
+                              backgroundImage: FileImage(provider.image!),
+                            )
+                          : CircleAvatar(
+                              radius: 50,
+                              child: Icon(Icons.person),
+                            ),
+                        TextButton(
+                          onPressed: () => _pickImage(context),
+                          child: Text('Pick Image'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
               TextField(
                 decoration: InputDecoration(labelText: 'Name'),
                 onChanged: (value) {
@@ -321,9 +349,12 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
   }
 
   Future<void> generateResumePdf(BuildContext context) async {
-    final provider = Provider.of<ResumeProvider>(context, listen: false);
-
+    final provider = context.read<ResumeProvider>();
     final pdf = pw.Document();
+
+    final profileImage = provider.image != null
+        ? pw.MemoryImage(provider.image!.readAsBytesSync())
+        : null;
 
     pdf.addPage(
       pw.Page(
@@ -331,35 +362,64 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
+              if (profileImage != null)
+                pw.Center(
+                  child: pw.ClipOval(
+                    child: pw.Image(profileImage, width: 100, height: 100),
+                  ),
+                ),
               pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
               pw.Text(provider.title, style: pw.TextStyle(fontSize: 18)),
-              pw.SizedBox(height: 10),
+              pw.Text(provider.phone),
+              pw.Text(provider.email),
+              pw.Text(provider.address),
+              pw.SizedBox(height: 20),
+              pw.Text('Summary', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.Text(provider.summary),
               pw.SizedBox(height: 20),
-              pw.Text('Contact', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              pw.Text('Phone: ${provider.phone}'),
-              pw.Text('Email: ${provider.email}'),
-              pw.Text('Address: ${provider.address}'),
-              pw.SizedBox(height: 20),
               pw.Text('Education', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              for (var education in provider.educationList) 
-                pw.Text('${education.course}, ${education.school}, ${education.yearEnded}'),
+              ...provider.educationList.map((education) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(education.course, style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('${education.school}, ${education.yearEnded}'),
+                    pw.SizedBox(height: 10),
+                  ],
+                );
+              }).toList(),
               pw.SizedBox(height: 20),
               pw.Text('Experience', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              for (var experience in provider.experienceList) 
-                pw.Text('${experience.jobName}, ${experience.startDate} - ${experience.endDate}\n${experience.summary}'),
+              ...provider.experienceList.map((experience) {
+                return pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(experience.jobName, style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                    pw.Text('${experience.startDate} - ${experience.endDate}'),
+                    pw.Text(experience.summary),
+                    pw.SizedBox(height: 10),
+                  ],
+                );
+              }).toList(),
               pw.SizedBox(height: 20),
               pw.Text('Skills', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              for (var skill in provider.skills) pw.Text(skill),
+              pw.Bullet(
+                text: provider.skills.join('\n'),
+              ),
               pw.SizedBox(height: 20),
               pw.Text('Languages', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              for (var language in provider.languages) pw.Text(language),
+              pw.Bullet(
+                text: provider.languages.join('\n'),
+              ),
             ],
           );
         },
       ),
     );
 
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'resume.pdf',
+    );
   }
 }
