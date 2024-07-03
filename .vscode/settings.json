@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "/Users/hammadsafi/StudioProjects/resumebuild/linux"
+    "cmake.sourceDirectory": "/Users/hammadsafi/StudioProjects/resumebuild/linux",
+    "cSpell.words": [
+        "svgviewer"
+    ]
 }

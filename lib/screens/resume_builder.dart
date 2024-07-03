@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -14,6 +17,9 @@ class ResumeFormScreen extends StatefulWidget {
   _ResumeFormScreenState createState() => _ResumeFormScreenState();
 }
 
+
+
+
 class _ResumeFormScreenState extends State<ResumeFormScreen> {
   Future<void> _pickImage(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -21,7 +27,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context.read<ResumeProvider>().setImage(File(pickedFile.path));
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +63,12 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                               radius: 50,
                               child: Icon(Icons.person),
                             ),
+                        SizedBox(height: 20,),
                         TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 47, 47, 47),
+                            foregroundColor: Colors.white,
+                          ),
                           onPressed: () => _pickImage(context),
                           child: Text('Pick Image'),
                         ),
@@ -181,13 +192,25 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 child: Text('Add Language'),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
+              Divider(height: 50,color: Color.fromARGB(255, 213, 213, 213),),
+             Padding( padding: EdgeInsets.all(20),
+             child: SizedBox(
+              width: double.infinity,
+              height: 70,
+              child: ElevatedButton(
+                
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 209, 157, 0),// Use secondary color from the theme
+                textStyle: const TextStyle(fontFamily: 'Montserrat'),
+                elevation: 5,
+
+              ),
                 onPressed: () {
                   generateResumePdf(context);
                 },
                 child: Text('Generate PDF'),
               ),
-            ],
+            ))],
           ),
         ),
       ),
@@ -349,8 +372,13 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
   }
 
   Future<void> generateResumePdf(BuildContext context) async {
-    final provider = context.read<ResumeProvider>();
+    final provider = Provider.of<ResumeProvider>(context, listen: false);
+
     final pdf = pw.Document();
+
+    final poppinsRegular = await PdfGoogleFonts.poppinsRegular();
+    final poppinsBold = await PdfGoogleFonts.poppinsBold();
+    final poppinsItalic = await PdfGoogleFonts.poppinsItalic();
 
     final profileImage = provider.image != null
         ? pw.MemoryImage(provider.image!.readAsBytesSync())
@@ -359,57 +387,57 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Column(
+          return pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              if (profileImage != null)
+            children: [ 
+              pw.Container(
+                width: 180,
+                padding: const pw.EdgeInsets.all(8.0),
+                color: PdfColors.blue400,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    if (profileImage != null)
                 pw.Center(
                   child: pw.ClipOval(
                     child: pw.Image(profileImage, width: 100, height: 100),
                   ),
                 ),
-              pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-              pw.Text(provider.title, style: pw.TextStyle(fontSize: 18)),
-              pw.Text(provider.phone),
-              pw.Text(provider.email),
-              pw.Text(provider.address),
-              pw.SizedBox(height: 20),
-              pw.Text('Summary', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              pw.Text(provider.summary),
-              pw.SizedBox(height: 20),
-              pw.Text('Education', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              ...provider.educationList.map((education) {
-                return pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(education.course, style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('${education.school}, ${education.yearEnded}'),
-                    pw.SizedBox(height: 10),
+                    pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    pw.Text(provider.title, style: pw.TextStyle(fontSize: 18, font: poppinsItalic)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Contact', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    pw.Text('Phone: ${provider.phone}', style: pw.TextStyle(font: poppinsRegular)),
+                    pw.Text('Email: ${provider.email}', style: pw.TextStyle(font: poppinsRegular)),
+                    pw.Text('Address: ${provider.address}', style: pw.TextStyle(font: poppinsRegular)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Skills', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    for (var skill in provider.skills)
+                      pw.Text(skill, style: pw.TextStyle(font: poppinsRegular)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Languages', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    for (var language in provider.languages)
+                      pw.Text(language, style: pw.TextStyle(font: poppinsRegular)),
                   ],
-                );
-              }).toList(),
-              pw.SizedBox(height: 20),
-              pw.Text('Experience', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              ...provider.experienceList.map((experience) {
-                return pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(experience.jobName, style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                    pw.Text('${experience.startDate} - ${experience.endDate}'),
-                    pw.Text(experience.summary),
-                    pw.SizedBox(height: 10),
-                  ],
-                );
-              }).toList(),
-              pw.SizedBox(height: 20),
-              pw.Text('Skills', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              pw.Bullet(
-                text: provider.skills.join('\n'),
+                ),
               ),
-              pw.SizedBox(height: 20),
-              pw.Text('Languages', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-              pw.Bullet(
-                text: provider.languages.join('\n'),
+              pw.SizedBox(width: 20),
+              pw.Expanded(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Summary', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    pw.Text(provider.summary, style: pw.TextStyle(font: poppinsRegular)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Education', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    for (var education in provider.educationList)
+                      pw.Text('${education.course}, ${education.school}, ${education.yearEnded}', style: pw.TextStyle(font: poppinsRegular)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Experience', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
+                    for (var experience in provider.experienceList)
+                      pw.Text('${experience.jobName}, ${experience.startDate} - ${experience.endDate}\n${experience.summary}', style: pw.TextStyle(font: poppinsRegular)),
+                  ],
+                ),
               ),
             ],
           );
@@ -417,9 +445,6 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       ),
     );
 
-    await Printing.sharePdf(
-      bytes: await pdf.save(),
-      filename: 'resume.pdf',
-    );
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
   }
 }
