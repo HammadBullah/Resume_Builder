@@ -13,6 +13,8 @@ import 'package:resumebuild/screens/welcome_secreen.dart';
 import 'package:resumebuild/utils/profile_data.dart';
 import 'package:resumebuild/utils/theme.dart';
 
+import 'utils/resume_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Initialize Firebase
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ChangeNotifierProvider(create: (context) => SkillExtractionProvider()),
+        ChangeNotifierProvider(create: (context) => ResumeProvider()),
       ],
       child: MaterialApp(
         title: 'Intelligent Resume Builder',
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignUpScreen(),
           '/profile': (context) => ProfileScreen(),
-          '/resume_builder': (context) => ResumeBuilderScreen(),
+          '/resume_builder': (context) => ResumeFormScreen(),
           '/skill_extraction': (context) => SkillExtractionScreen(),
           '/interview_preparation': (context) => InterviewPreparationScreen(),
           '/template_customization': (context) => TemplateCustomizationScreen(),

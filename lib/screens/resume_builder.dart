@@ -1,402 +1,163 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'dart:async';
+import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
+import 'package:resumebuild/utils/resume_provider.dart';
 
-import 'package:resumebuild/utils/theme.dart';
+class ResumeFormScreen extends StatefulWidget {
+  const ResumeFormScreen({Key? key}) : super(key: key);
 
-class ResumeBuilderScreen extends StatefulWidget {
   @override
-  _ResumeBuilderScreenState createState() => _ResumeBuilderScreenState();
+  _ResumeFormScreenState createState() => _ResumeFormScreenState();
 }
 
-class _ResumeBuilderScreenState extends State<ResumeBuilderScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  String? _fullName, _email, _phoneNumber, _address;
-  String? _professionalSummary;
-  List<Experience> _experience = [];
-  List<Education> _education = [];
-  List<String> _skills = [];
-  List<String> _certifications = [];
-  List<String> _projects = [];
-
+class _ResumeFormScreenState extends State<ResumeFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       title: Text('Resume Builder', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor:  Color.fromARGB(255, 209, 157, 0),),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Full Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your full name';
-                  }
-                  return null;
+              Icon(Icons.person),
+              SizedBox(width: 10),
+              Text('Resume Builder'),
+            ],
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Name'),
+                onChanged: (value) {
+                  context.read<ResumeProvider>().name = value;
                 },
-                onSaved: (value) => _fullName = value!,
               ),
-              TextFormField(
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                onChanged: (value) {
+                  context.read<ResumeProvider>().title = value;
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Summary'),
+                onChanged: (value) {
+                  context.read<ResumeProvider>().summary = value;
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Phone'),
+                onChanged: (value) {
+                  context.read<ResumeProvider>().phone = value;
+                },
+              ),
+              TextField(
                 decoration: InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value!.isEmpty || value.contains('@')) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
+                onChanged: (value) {
+                  context.read<ResumeProvider>().email = value;
                 },
-                onSaved: (value) => _email = value,
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Phone Number'),
-                validator: (value) {
-                  if (value!.isEmpty || value.length < 10) {
-                    return 'Please enter a valid phone number';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _phoneNumber = value,
-              ),
-              TextFormField(
+              TextField(
                 decoration: InputDecoration(labelText: 'Address'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your address';
-                  }
-                  return null;
+                onChanged: (value) {
+                  context.read<ResumeProvider>().address = value;
                 },
-                onSaved: (value) => _address = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Professional Summary'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your professional summary';
-                  }
-                  return null;
-                },
-                onSaved: (value) => _professionalSummary = value,
               ),
               SizedBox(height: 20),
-              Text('Experience:'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _experience.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Work Type'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your work type';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _experience[index].workType = value!,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Work Beginning Date'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your work beginning date';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _experience[index].beginDate = value!,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Work End Date'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your work end date';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _experience[index].endDate = value!,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Work Description'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your work description';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _experience[index].description = value!,
-                        ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          _experience.removeAt(index);
-                        });
-                      },
-                    ),
+              Text('Education', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Consumer<ResumeProvider>(
+                builder: (context, provider, child) {
+                  return Column(
+                    children: provider.educationList.map((education) {
+                      return ListTile(
+                        title: Text(education.course),
+                        subtitle: Text('${education.school}, ${education.yearEnded}'),
+                      );
+                    }).toList(),
                   );
                 },
               ),
               ElevatedButton(
-                child: Text('Add Experience'),
                 onPressed: () {
-                  setState(() {
-                    _experience.add(Experience());
-                  });
+                  _addEducation(context);
                 },
-              ),
-              SizedBox(height: 20),
-              Text('Education:'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _education.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'School/Campus'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your school/campus';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _education[index].school = value!,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Area of Study'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your area of study';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _education[index].areaOfStudy = value!,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Marks'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your marks';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _education[index].marks = value!,
-                        ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          _education.removeAt(index);
-                        });
-                      },
-                    ),
-                  );
-                },
-              ),
-              ElevatedButton(
                 child: Text('Add Education'),
-                onPressed: () {
-                  setState(() {
-                    _education.add(Education());
-                  });
-                },
               ),
               SizedBox(height: 20),
-              Text('Skills:'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _skills.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: TextFormField(
-                      decoration: InputDecoration(labelText: 'Skill $index'),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your skill';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) => _skills[index] = value!,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          _skills.removeAt(index);
-                        });
-                      },
-                    ),
+              Text('Experience', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Consumer<ResumeProvider>(
+                builder: (context, provider, child) {
+                  return Column(
+                    children: provider.experienceList.map((experience) {
+                      return ListTile(
+                        title: Text(experience.jobName),
+                        subtitle: Text('${experience.startDate} - ${experience.endDate}'),
+                      );
+                    }).toList(),
                   );
                 },
               ),
               ElevatedButton(
+                onPressed: () {
+                  _addExperience(context);
+                },
+                child: Text('Add Experience'),
+              ),
+              SizedBox(height: 20),
+              Text('Skills', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Consumer<ResumeProvider>(
+                builder: (context, provider, child) {
+                  return Column(
+                    children: provider.skills.map((skill) {
+                      return ListTile(
+                        title: Text(skill),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _addSkill(context);
+                },
                 child: Text('Add Skill'),
-                onPressed: () {
-                  setState(() {
-                    _skills.add('');
-                  });
-                },
               ),
               SizedBox(height: 20),
-              Text('Certifications:'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _certifications.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: TextFormField(
-                      decoration: InputDecoration(labelText: 'Certification $index'),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your certification';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) => _certifications[index] = value!,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          _certifications.removeAt(index);
-                        });
-                      },
-                    ),
+              Text('Languages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Consumer<ResumeProvider>(
+                builder: (context, provider, child) {
+                  return Column(
+                    children: provider.languages.map((language) {
+                      return ListTile(
+                        title: Text(language),
+                      );
+                    }).toList(),
                   );
                 },
               ),
               ElevatedButton(
-                child: Text('Add Certification'),
                 onPressed: () {
-                  setState(() {
-                    _certifications.add('');
-                  });
+                  _addLanguage(context);
                 },
-              ),
-              SizedBox(height: 20),
-              Text('Projects:'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _projects.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: TextFormField(
-                      decoration: InputDecoration(labelText: 'Project $index'),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your project';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) => _projects[index] = value!,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          _projects.removeAt(index);
-                        });
-                      },
-                    ),
-                  );
-                },
-              ),
-              ElevatedButton(
-                child: Text('Add Project'),
-                onPressed: () {
-                  setState(() {
-                    _projects.add('');
-                  });
-                },
+                child: Text('Add Language'),
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                child: Text('Generate Resume'),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    final pdf = pw.Document();
-                    pdf.addPage(pw.MultiPage(
-                      build: (pw.Context context) {
-                        return [
-                          pw.Center(
-                            child: pw.Text(
-                              'Resume',
-                              style: pw.TextStyle(fontSize: 24),
-                            ),
-                          ),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Full Name: $_fullName'),
-                          pw.Text('Email: $_email'),
-                          pw.Text('Phone Number: $_phoneNumber'),
-                          pw.Text('Address: $_address'),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Professional Summary:'),
-                          pw.Text(_professionalSummary?? ''),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Experience:'),
-                         ..._experience.map((experience) {
-                            return pw.Column(
-                              children: [
-                                pw.Text('Work Type: ${experience.workType}'),
-                                pw.Text('Work Beginning Date:${experience.beginDate}'),
-                                pw.Text('Work End Date: ${experience.endDate}'),
-                                pw.Text('Work Description: ${experience.description}'),
-                              ],
-                            );
-                          }),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Education:'),
-                        ..._education.map((education) {
-                            return pw.Column(
-                              children: [
-                                pw.Text('School/Campus: ${education.school}'),
-                                pw.Text('Area of Study: ${education.areaOfStudy}'),
-                                pw.Text('Marks: ${education.marks}'),
-                              ],
-                            );
-                          }),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Skills:'),
-                        ..._skills.map((skill) => pw.Text(skill)),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Certifications:'),
-                        ..._certifications.map((certification) => pw.Text(certification)),
-                          pw.SizedBox(height: 20),
-                          pw.Text('Projects:'),
-                        ..._projects.map((project) => pw.Text(project)),
-                        ];
-                      },
-                    ));
-                    final directory = await getApplicationDocumentsDirectory();
-                    final file = File('${directory.path}/resume.pdf');
-                    await file.writeAsBytes(await pdf.save());
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Resume generated successfully!'),
-                      ),
-                    );
-                  }
+                onPressed: () {
+                  generateResumePdf(context);
                 },
+                child: Text('Generate PDF'),
               ),
             ],
           ),
@@ -404,61 +165,201 @@ class _ResumeBuilderScreenState extends State<ResumeBuilderScreen> {
       ),
     );
   }
-}
 
+  void _addEducation(BuildContext context) {
+    final courseController = TextEditingController();
+    final schoolController = TextEditingController();
+    final yearController = TextEditingController();
 
-class Experience {
-  String? workType;
-  String? beginDate;
-  String? endDate;
-  String? description;
-}
-
-class Education {
-  String? school;
-  String? areaOfStudy;
-  String? marks;
-}
-
-  
-class ResumeScoring {
-  static const int MAX_SCORE = 8;
-
-  int calculateScore(Resume resume) {
-    int score = 0;
-    if (resume.fullName!.isNotEmpty) score++;
-    if (resume.email!.isNotEmpty) score++;
-    if (resume.phoneNumber!.isNotEmpty) score++;
-    if (resume.address!.isNotEmpty) score++;
-    if (resume.professionalSummary!.isNotEmpty) score++;
-    if (resume.experience!.length > 0) score++;
-    if (resume.education!.length > 0) score++;
-    if (resume.skills!.length > 0) score++;
-    if (resume.certifications!.length > 0) score++;
-    if (resume.projects!.length > 0) score++;
-    return score;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Education'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: courseController,
+                decoration: InputDecoration(labelText: 'Course'),
+              ),
+              TextField(
+                controller: schoolController,
+                decoration: InputDecoration(labelText: 'School'),
+              ),
+              TextField(
+                controller: yearController,
+                decoration: InputDecoration(labelText: 'Year Ended'),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                final education = Education(
+                  course: courseController.text,
+                  school: schoolController.text,
+                  yearEnded: yearController.text,
+                );
+                context.read<ResumeProvider>().educationList.add(education);
+                context.read<ResumeProvider>().notifyListeners();
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  String getScoreText(int score) {
-    if (score < MAX_SCORE / 2) {
-      return 'Weak';
-    } else if (score < MAX_SCORE * 3 / 4) {
-      return 'Average';
-    } else {
-      return 'Strong';
-    }
-  }
-}
+  void _addExperience(BuildContext context) {
+    final jobNameController = TextEditingController();
+    final summaryController = TextEditingController();
+    final startDateController = TextEditingController();
+    final endDateController = TextEditingController();
 
-class Resume {
-  String? fullName;
-  String? email;
-  String? phoneNumber;
-  String? address;
-  String? professionalSummary;
-  List<String>? experience;
-  List<String>? education;
-  List<String>? skills;
-  List<String>? certifications;
-  List<String>? projects;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Experience'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: jobNameController,
+                decoration: InputDecoration(labelText: 'Job Name'),
+              ),
+              TextField(
+                controller: summaryController,
+                decoration: InputDecoration(labelText: 'Summary'),
+              ),
+              TextField(
+                controller: startDateController,
+                decoration: InputDecoration(labelText: 'Start Date'),
+              ),
+              TextField(
+                controller: endDateController,
+                decoration: InputDecoration(labelText: 'End Date'),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                final experience = Experience(
+                  jobName: jobNameController.text,
+                  summary: summaryController.text,
+                  startDate: startDateController.text,
+                  endDate: endDateController.text,
+                );
+                context.read<ResumeProvider>().experienceList.add(experience);
+                context.read<ResumeProvider>().notifyListeners();
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addSkill(BuildContext context) {
+    final skillController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Skill'),
+          content: TextField(
+            controller: skillController,
+            decoration: InputDecoration(labelText: 'Skill'),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                context.read<ResumeProvider>().skills.add(skillController.text);
+                context.read<ResumeProvider>().notifyListeners();
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addLanguage(BuildContext context) {
+    final languageController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Language'),
+          content: TextField(
+            controller: languageController,
+            decoration: InputDecoration(labelText: 'Language'),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                context.read<ResumeProvider>().languages.add(languageController.text);
+                context.read<ResumeProvider>().notifyListeners();
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> generateResumePdf(BuildContext context) async {
+    final provider = Provider.of<ResumeProvider>(context, listen: false);
+
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+              pw.Text(provider.title, style: pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 10),
+              pw.Text(provider.summary),
+              pw.SizedBox(height: 20),
+              pw.Text('Contact', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Phone: ${provider.phone}'),
+              pw.Text('Email: ${provider.email}'),
+              pw.Text('Address: ${provider.address}'),
+              pw.SizedBox(height: 20),
+              pw.Text('Education', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              for (var education in provider.educationList) 
+                pw.Text('${education.course}, ${education.school}, ${education.yearEnded}'),
+              pw.SizedBox(height: 20),
+              pw.Text('Experience', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              for (var experience in provider.experienceList) 
+                pw.Text('${experience.jobName}, ${experience.startDate} - ${experience.endDate}\n${experience.summary}'),
+              pw.SizedBox(height: 20),
+              pw.Text('Skills', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              for (var skill in provider.skills) pw.Text(skill),
+              pw.SizedBox(height: 20),
+              pw.Text('Languages', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              for (var language in provider.languages) pw.Text(language),
+            ],
+          );
+        },
+      ),
+    );
+
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
+  }
 }
