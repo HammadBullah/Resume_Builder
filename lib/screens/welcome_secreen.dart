@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // Add your app logo here
-                  Image.asset('assets/Resume-assessment.png',),
+                  Image.asset('assets/pexels-sohi-807598.jpg',),
                   const SizedBox(height: 20),
                   const Text(
                     'Welcome to Resume Builder',
