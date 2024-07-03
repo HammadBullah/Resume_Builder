@@ -1,18 +1,19 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 class Education {
-  String course;
-  String school;
-  String yearEnded;
+  final String course;
+  final String school;
+  final String yearEnded;
 
   Education({required this.course, required this.school, required this.yearEnded});
 }
 
 class Experience {
-  String jobName;
-  String summary;
-  String startDate;
-  String endDate;
+  final String jobName;
+  final String summary;
+  final String startDate;
+  final String endDate;
 
   Experience({required this.jobName, required this.summary, required this.startDate, required this.endDate});
 }
@@ -28,6 +29,30 @@ class ResumeProvider with ChangeNotifier {
   List<Experience> experienceList = [];
   List<String> skills = [];
   List<String> languages = [];
+  Uint8List? photo;
 
-  // Methods to update these fields and notify listeners
+  void addEducation(Education education) {
+    educationList.add(education);
+    notifyListeners();
+  }
+
+  void addExperience(Experience experience) {
+    experienceList.add(experience);
+    notifyListeners();
+  }
+
+  void addSkill(String skill) {
+    skills.add(skill);
+    notifyListeners();
+  }
+
+  void addLanguage(String language) {
+    languages.add(language);
+    notifyListeners();
+  }
+
+  void setPhoto(Uint8List? newPhoto) {
+    photo = newPhoto;
+    notifyListeners();
+  }
 }
