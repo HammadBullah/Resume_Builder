@@ -71,6 +71,9 @@ flutter:
   assets:
     - assets/pexels-sohi-807598.jpg
     - assets/resume-assessment.png
+    - assets/single_column_resume_template_1_c1e24e6e04.png
+    - assets/1131w-pIsBixsev8I.webp
+    - assets/1131w-f5JNR-K5jjw.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

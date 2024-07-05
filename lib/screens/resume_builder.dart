@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:resumebuild/utils/resume_provider.dart';
 
 class ResumeFormScreen extends StatefulWidget {
-  const ResumeFormScreen({Key? key}) : super(key: key);
+  const ResumeFormScreen({Key? key, required String template}) : super(key: key);
 
   @override
   _ResumeFormScreenState createState() => _ResumeFormScreenState();
