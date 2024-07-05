@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.1.3
   printing: ^5.13.1
   flutter_svg: ^2.0.10+1
+  flutter_resume_template: ^1.2.1
 
 dev_dependencies:
   flutter_test:
