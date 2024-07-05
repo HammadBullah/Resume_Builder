@@ -8,7 +8,8 @@ class TemplateSelectionScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select Resume Template'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -51,7 +52,7 @@ class TemplateSelectionScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
