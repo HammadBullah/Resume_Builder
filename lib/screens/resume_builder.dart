@@ -391,18 +391,19 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [ 
               pw.Container(
-                width: 180,
+                width: 200,
                 padding: const pw.EdgeInsets.all(8.0),
-                color: PdfColors.blue400,
+                color: PdfColors.blue900,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     if (profileImage != null)
                 pw.Center(
                   child: pw.ClipOval(
-                    child: pw.Image(profileImage, width: 100, height: 100),
+                    child: pw.Image(profileImage, width: 300, height: 200),
                   ),
                 ),
+                pw.SizedBox(height: 20),
                     pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
                     pw.Text(provider.title, style: pw.TextStyle(fontSize: 18, font: poppinsItalic)),
                     pw.SizedBox(height: 20),
