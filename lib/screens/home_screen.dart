@@ -119,6 +119,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _logoutUser(BuildContext context) {
-    _authService.signOut(context); // Call your AuthService signOut method
+    _authService?.signOut(context); // Call your AuthService signOut method
   }
 }
