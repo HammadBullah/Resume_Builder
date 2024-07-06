@@ -366,7 +366,7 @@ String _selectedTopic = 'Algorithms'; // Default topic
                 );
               }).toList(),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 itemCount: _content[_selectedTopic]?.length?? 0,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:resumebuild/utils/auth.dart';// Import your authentication service
 
 class HomeScreen extends StatelessWidget {
-  final AuthService _authService = AuthService(); // Instance of your AuthService
+  final AuthService _authService = AuthService();
+
+  HomeScreen({super.key}); // Instance of your AuthService
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +15,12 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Text('Home', style: TextStyle(fontFamily: 'Courier New', fontWeight: FontWeight.w700, fontSize: 30)),
         ),
-        backgroundColor: Color.fromARGB(255, 211, 160, 6),
+        backgroundColor: const Color.fromARGB(255, 211, 160, 6),
         actions: [
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
             child: IconButton(
-              icon: Icon(Icons.person),
+              icon: const Icon(Icons.person),
               onPressed: () {
                 _showProfileMenu(context); // Show profile menu on tap
               },
@@ -50,7 +52,7 @@ class HomeScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Color.fromARGB(255, 28, 28, 29), Color.fromARGB(255, 81, 78, 83)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -61,7 +63,7 @@ class HomeScreen extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -69,10 +71,10 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 40, color: Colors.white),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 16,
                 color: Colors.white,
@@ -80,7 +82,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
       ),
     );
   }
@@ -95,17 +97,17 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                leading: Icon(Icons.edit),
-                title: Text('Edit Profile'),
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit Profile'),
                 onTap: () {
                   Navigator.pop(context); // Close the modal
                   Navigator.pushNamed(context, '/profile'); // Navigate to profile screen
                 },
               ),
-              Divider(),
+              const Divider(),
               ListTile(
-                leading: Icon(Icons.logout),
-                title: Text('Log Out'),
+                leading: const Icon(Icons.logout),
+                title: const Text('Log Out'),
                 onTap: () {
                   Navigator.pop(context); // Close the modal
                   _logoutUser(context); // Logout user
