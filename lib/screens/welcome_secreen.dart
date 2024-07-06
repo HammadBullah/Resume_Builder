@@ -1,79 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:resumebuild/utils/theme.dart'; // Import the theme file
+import 'package:liquid_swipe/liquid_swipe.dart';
+import 'package:resumebuild/screens/sighnup_screen.dart';
+import 'package:resumebuild/utils/theme.dart'; // Import your theme file
+import 'login_screen.dart'; // Import your LoginScreen widget
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class WelcomeScreen extends StatefulWidget {
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  int _currentPage = 0;
+
+  final pages = [
+    Container(
+      color: const Color.fromARGB(255, 37, 37, 37),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/resume-assessment.png'),
+          SizedBox(height: 20),
+          Text(
+            'Welcome to Resume Builder',
+            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Create a professional resume easily',
+            style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.normal),
+          ),
+        ],
+      ),
+    ),
+    LoginScreen(), // Replace with your LoginScreen widget
+    SignUpScreen(), // Replace with your SignUpScreen widget
+  ];
+
+  final pageTitles = [
+    'Welcome Screen',
+    'Login Screen',
+    'Sign Up Screen',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  // Add your app logo here
-                  Image.asset('assets/pexels-sohi-807598.jpg',),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Welcome to Resume Builder',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Create a professional resume easily',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  ButtonTheme(
-                    minWidth: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/login');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 5,
+      body: Stack(
+        children: [
+          LiquidSwipe(
+            pages: pages,
+            enableLoop: false,
+            waveType: WaveType.liquidReveal,
+            fullTransitionValue: 400,
+            onPageChangeCallback: (page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+          ),
+          Positioned(
+            bottom: 50,
+            left: 0,
+            right: 0,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 100),
+                child: _currentPage == 0
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
+                            child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Swipe to Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                           Container(
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
+                                child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Swipe to Signup',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                        ],
+                      )
+                    : _currentPage == 1
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
+                                child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Swipe to Signup',
+                                style: TextStyle(
+                                  color: const Color.fromARGB(255, 41, 40, 40),
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ],
+                          )
+                        : _currentPage == 2
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
+                                child: Icon(Icons.arrow_left_rounded, color: Colors.white, size: 50),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Swipe to Login',
+                                style: TextStyle(
+                                  color: const Color.fromARGB(255, 41, 40, 40),
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ],
+                          )
+                                      : SizedBox.shrink(),
 
-                        backgroundColor: AppColors.primary, 
-                        foregroundColor: Colors.white,// Use secondary color from the theme
-                        textStyle: const TextStyle(fontFamily: 'Montserrat', color: Colors.white),
-                      ),
-                      child: const Text('Login'),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ButtonTheme(
-                    minWidth: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/signup');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        backgroundColor: const Color.fromARGB(255, 230, 230, 230),
-                        foregroundColor: Color.fromARGB(255, 71, 68, 81) ,
-                         // Use primary color from the theme
-                        textStyle: const TextStyle(fontFamily: 'Montserrat',color: Color.fromARGB(255, 215, 208, 242)),
-                      ),
-                      child: const Text('Sign Up'),
-                    ),
-                  ),
-                  
-                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

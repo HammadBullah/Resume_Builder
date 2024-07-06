@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,9 +17,6 @@ class ResumeFormScreen extends StatefulWidget {
   _ResumeFormScreenState createState() => _ResumeFormScreenState();
 }
 
-
-
-
 class _ResumeFormScreenState extends State<ResumeFormScreen> {
   Future<void> _pickImage(BuildContext context) async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -27,7 +24,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context.read<ResumeProvider>().setImage(File(pickedFile.path));
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,14 +52,14 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                     child: Column(
                       children: [
                         provider.image != null
-                          ? CircleAvatar(
-                              radius: 50,
-                              backgroundImage: FileImage(provider.image!),
-                            )
-                          : CircleAvatar(
-                              radius: 50,
-                              child: Icon(Icons.person),
-                            ),
+                            ? CircleAvatar(
+                                radius: 50,
+                                backgroundImage: FileImage(provider.image!),
+                              )
+                            : CircleAvatar(
+                                radius: 50,
+                                child: Icon(Icons.person),
+                              ),
                         SizedBox(height: 20,),
                         TextButton(
                           style: TextButton.styleFrom(
@@ -192,25 +189,23 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 child: Text('Add Language'),
               ),
               SizedBox(height: 20),
-              Divider(height: 50,color: Color.fromARGB(255, 213, 213, 213),),
-             Padding( padding: EdgeInsets.all(20),
-             child: SizedBox(
-              width: double.infinity,
-              height: 70,
-              child: ElevatedButton(
-                
-                style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 209, 157, 0),// Use secondary color from the theme
-                textStyle: const TextStyle(fontFamily: 'Montserrat'),
-                elevation: 5,
-
+              Divider(height: 50, color: Color.fromARGB(255, 213, 213, 213)),
+              SizedBox(
+                width: double.infinity,
+                height: 70,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 209, 157, 0),
+                    textStyle: const TextStyle(fontFamily: 'Montserrat'),
+                    elevation: 5,
+                  ),
+                  onPressed: () {
+                    generateResumePdf(context);
+                  },
+                  child: Text('Generate PDF'),
+                ),
               ),
-                onPressed: () {
-                  generateResumePdf(context);
-                },
-                child: Text('Generate PDF'),
-              ),
-            ))],
+            ],
           ),
         ),
       ),
@@ -389,21 +384,21 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
         build: (pw.Context context) {
           return pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [ 
+            children: [
               pw.Container(
                 width: 200,
                 padding: const pw.EdgeInsets.all(8.0),
-                color: PdfColors.blue900,
+                color: PdfColors.blue200,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     if (profileImage != null)
-                pw.Center(
-                  child: pw.ClipOval(
-                    child: pw.Image(profileImage, width: 300, height: 200),
-                  ),
-                ),
-                pw.SizedBox(height: 20),
+                      pw.Center(
+                        child: pw.ClipOval(
+                          child: pw.Image(profileImage, width: 150, height: 150), // Adjust size as needed
+                        ),
+                      ),
+                    pw.SizedBox(height: 20),
                     pw.Text(provider.name, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, font: poppinsBold)),
                     pw.Text(provider.title, style: pw.TextStyle(fontSize: 18, font: poppinsItalic)),
                     pw.SizedBox(height: 20),
@@ -449,3 +444,4 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
   }
 }
+

@@ -45,6 +45,7 @@ dependencies:
   printing: ^5.13.1
   flutter_svg: ^2.0.10+1
   flutter_resume_template: ^1.2.1
+  liquid_swipe: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
     - assets/single_column_resume_template_1_c1e24e6e04.png
     - assets/1131w-pIsBixsev8I.webp
     - assets/1131w-f5JNR-K5jjw.webp
+    - assets/resume-assessment.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
