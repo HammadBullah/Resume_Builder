@@ -7,6 +7,7 @@ import 'package:resumebuild/screens/login_screen.dart';
 import 'package:resumebuild/screens/resume_builder.dart';
 import 'package:resumebuild/screens/sighnup_screen.dart';
 import 'package:resumebuild/screens/skill_extraction.dart';
+import 'package:resumebuild/screens/splash_Scree.dart';
 import 'package:resumebuild/screens/template_customization.dart';
 import 'package:resumebuild/screens/user_profile.dart';
 import 'package:resumebuild/screens/welcome_secreen.dart';
@@ -33,9 +34,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Intelligent Resume Builder',
         theme: AppTheme.theme,
-        initialRoute: '/',
+        home: SplashScreen(),
         routes: {
-          '/': (context) => WelcomeScreen(),
+          '/welcome': (context) => WelcomeScreen(),
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignUpScreen(),
           '/profile': (context) => ProfileScreen(),

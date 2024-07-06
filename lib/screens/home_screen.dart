@@ -1,24 +1,5 @@
-import 'package:flutter/material.dart';// Import your authentication service
-
-class AuthService {
-  // Example method to simulate user authentication
-  Future<bool> signIn(String email, String password) async {
-    // Simulate a delay for authentication (replace with your actual authentication logic)
-    await Future.delayed(Duration(seconds: 2));
-    
-    // Simulate successful login
-    return true;
-  }
-
-  // Example method to simulate user logout
-  Future<void> signOut(BuildContext context) async {
-    // Simulate a delay for logout (replace with your actual logout logic)
-    await Future.delayed(Duration(seconds: 1));
-    
-    // Navigate to the welcome screen and remove all previous routes
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
-}
+import 'package:flutter/material.dart';
+import 'package:resumebuild/utils/auth.dart';// Import your authentication service
 
 class HomeScreen extends StatelessWidget {
   final AuthService _authService = AuthService(); // Instance of your AuthService
@@ -28,20 +9,22 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Padding(padding: EdgeInsets.all(20),
-        child: Text('Home', style: TextStyle(fontFamily: 'Courier New', fontWeight: FontWeight.w700, fontSize: 30)),),
+        title: const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text('Home', style: TextStyle(fontFamily: 'Courier New', fontWeight: FontWeight.w700, fontSize: 30)),
+        ),
         backgroundColor: Color.fromARGB(255, 211, 160, 6),
         actions: [
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
             child: IconButton(
-            icon: Icon(Icons.person),
-
-            onPressed: () {
-              _showProfileMenu(context); // Show profile menu on tap
-            },
+              icon: Icon(Icons.person),
+              onPressed: () {
+                _showProfileMenu(context); // Show profile menu on tap
+              },
+            ),
           ),
-        )],
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -136,7 +119,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _logoutUser(BuildContext context) {
-  _authService.signOut(context); // Call your AuthService signOut method
-}
-
+    _authService.signOut(context); // Call your AuthService signOut method
+  }
 }
