@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class InterviewPreparationScreen extends StatefulWidget {
-  const InterviewPreparationScreen({Key? key}) : super(key: key);
+  const InterviewPreparationScreen({super.key});
 
   @override
   _InterviewPreparationScreenState createState() =>
@@ -344,8 +344,8 @@ String _selectedTopic = 'Algorithms'; // Default topic
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Interview Preparation', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor:  Color.fromARGB(255, 209, 157, 0),
+        title: const Text('Interview Preparation', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor:  const Color.fromARGB(255, 209, 157, 0),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

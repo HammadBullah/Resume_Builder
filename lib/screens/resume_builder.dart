@@ -30,8 +30,8 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Row(
             children: [
               Icon(Icons.person),
@@ -57,18 +57,18 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                                 radius: 50,
                                 backgroundImage: FileImage(provider.image!),
                               )
-                            : CircleAvatar(
+                            : const CircleAvatar(
                                 radius: 50,
                                 child: Icon(Icons.person),
                               ),
-                        SizedBox(height: 20,),
+                        const SizedBox(height: 20,),
                         TextButton(
                           style: TextButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 47, 47, 47),
+                            backgroundColor: const Color.fromARGB(255, 47, 47, 47),
                             foregroundColor: Colors.white,
                           ),
                           onPressed: () => _pickImage(context),
-                          child: Text('Pick Image'),
+                          child: const Text('Pick Image'),
                         ),
                       ],
                     ),
@@ -76,43 +76,43 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Name'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().name = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: const InputDecoration(labelText: 'Title'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().title = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Summary'),
+                decoration: const InputDecoration(labelText: 'Summary'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().summary = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Phone'),
+                decoration: const InputDecoration(labelText: 'Phone'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().phone = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().email = value;
                 },
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Address'),
+                decoration: const InputDecoration(labelText: 'Address'),
                 onChanged: (value) {
                   context.read<ResumeProvider>().address = value;
                 },
               ),
-              SizedBox(height: 20),
-              Text('Education', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const Text('Education', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Consumer<ResumeProvider>(
                 builder: (context, provider, child) {
                   return Column(
@@ -129,10 +129,10 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 onPressed: () {
                   _addEducation(context);
                 },
-                child: Text('Add Education'),
+                child: const Text('Add Education'),
               ),
-              SizedBox(height: 20),
-              Text('Experience', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const Text('Experience', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Consumer<ResumeProvider>(
                 builder: (context, provider, child) {
                   return Column(
@@ -149,10 +149,10 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 onPressed: () {
                   _addExperience(context);
                 },
-                child: Text('Add Experience'),
+                child: const Text('Add Experience'),
               ),
-              SizedBox(height: 20),
-              Text('Skills', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const Text('Skills', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Consumer<ResumeProvider>(
                 builder: (context, provider, child) {
                   return Column(
@@ -168,10 +168,10 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 onPressed: () {
                   _addSkill(context);
                 },
-                child: Text('Add Skill'),
+                child: const Text('Add Skill'),
               ),
-              SizedBox(height: 20),
-              Text('Languages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const Text('Languages', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Consumer<ResumeProvider>(
                 builder: (context, provider, child) {
                   return Column(
@@ -187,23 +187,23 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 onPressed: () {
                   _addLanguage(context);
                 },
-                child: Text('Add Language'),
+                child: const Text('Add Language'),
               ),
-              SizedBox(height: 20),
-              Divider(height: 50, color: Color.fromARGB(255, 213, 213, 213)),
+              const SizedBox(height: 20),
+              const Divider(height: 50, color: Color.fromARGB(255, 213, 213, 213)),
               SizedBox(
                 width: double.infinity,
                 height: 70,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 209, 157, 0),
+                    backgroundColor: const Color.fromARGB(255, 209, 157, 0),
                     textStyle: const TextStyle(fontFamily: 'Montserrat'),
                     elevation: 5,
                   ),
                   onPressed: () {
                     generateResumePdf(context);
                   },
-                  child: Text('Generate PDF'),
+                  child: const Text('Generate PDF'),
                 ),
               ),
             ],
@@ -222,21 +222,21 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Education'),
+          title: const Text('Add Education'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: courseController,
-                decoration: InputDecoration(labelText: 'Course'),
+                decoration: const InputDecoration(labelText: 'Course'),
               ),
               TextField(
                 controller: schoolController,
-                decoration: InputDecoration(labelText: 'School'),
+                decoration: const InputDecoration(labelText: 'School'),
               ),
               TextField(
                 controller: yearController,
-                decoration: InputDecoration(labelText: 'Year Ended'),
+                decoration: const InputDecoration(labelText: 'Year Ended'),
               ),
             ],
           ),
@@ -252,7 +252,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 context.read<ResumeProvider>().notifyListeners();
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );
@@ -270,25 +270,25 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Experience'),
+          title: const Text('Add Experience'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: jobNameController,
-                decoration: InputDecoration(labelText: 'Job Name'),
+                decoration: const InputDecoration(labelText: 'Job Name'),
               ),
               TextField(
                 controller: summaryController,
-                decoration: InputDecoration(labelText: 'Summary'),
+                decoration: const InputDecoration(labelText: 'Summary'),
               ),
               TextField(
                 controller: startDateController,
-                decoration: InputDecoration(labelText: 'Start Date'),
+                decoration: const InputDecoration(labelText: 'Start Date'),
               ),
               TextField(
                 controller: endDateController,
-                decoration: InputDecoration(labelText: 'End Date'),
+                decoration: const InputDecoration(labelText: 'End Date'),
               ),
             ],
           ),
@@ -305,7 +305,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 context.read<ResumeProvider>().notifyListeners();
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );
@@ -320,10 +320,10 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Skill'),
+          title: const Text('Add Skill'),
           content: TextField(
             controller: skillController,
-            decoration: InputDecoration(labelText: 'Skill'),
+            decoration: const InputDecoration(labelText: 'Skill'),
           ),
           actions: [
             ElevatedButton(
@@ -332,7 +332,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 context.read<ResumeProvider>().notifyListeners();
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );
@@ -347,10 +347,10 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Language'),
+          title: const Text('Add Language'),
           content: TextField(
             controller: languageController,
-            decoration: InputDecoration(labelText: 'Language'),
+            decoration: const InputDecoration(labelText: 'Language'),
           ),
           actions: [
             ElevatedButton(
@@ -359,7 +359,7 @@ class _ResumeFormScreenState extends State<ResumeFormScreen> {
                 context.read<ResumeProvider>().notifyListeners();
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );

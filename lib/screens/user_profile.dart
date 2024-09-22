@@ -57,8 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Color.fromARGB(255, 209, 157, 0),
+        title: const Text('Profile', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor: const Color.fromARGB(255, 209, 157, 0),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:resumebuild/screens/welcome_secreen.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -18,19 +20,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Animation controller setup
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3), // Total animation duration
+      duration: const Duration(seconds: 3), // Total animation duration
     );
 
     // Scale animation setup
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.5).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: Interval(0.0, 0.5, curve: Curves.easeInOut), // Zoom in for the first half
+        curve: const Interval(0.0, 0.5, curve: Curves.easeInOut), // Zoom in for the first half
       ),
     );
 
     // Start the animation after a delay
-    Timer(Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 500), () {
       _animationController.forward();
     });
 
@@ -54,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 55, 55, 55), // Customize as per your design
+      backgroundColor: const Color.fromARGB(255, 55, 55, 55), // Customize as per your design
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 height: 200.0,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Image.asset(
                 'assets/Image_06-07-24_at_8.23_PM-removebg-preview.png', // Replace with your logo asset path
                 width: 200.0, // Adjust size as needed

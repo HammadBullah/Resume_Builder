@@ -5,6 +5,8 @@ import 'package:resumebuild/utils/theme.dart'; // Import your theme file
 import 'login_screen.dart'; // Import your LoginScreen widget
 
 class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({super.key});
+
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -19,21 +21,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset('assets/resume-assessment.png'),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          const Text(
             'Welcome to Resume Builder',
             style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
           ),
-          SizedBox(height: 10),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             'Create a professional resume easily',
             style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.normal),
           ),
         ],
       ),
     ),
-    LoginScreen(), // Replace with your LoginScreen widget
-    SignUpScreen(), // Replace with your SignUpScreen widget
+    const LoginScreen(), // Replace with your LoginScreen widget
+    const SignUpScreen(), // Replace with your SignUpScreen widget
   ];
 
   final pageTitles = [
@@ -65,30 +67,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 100),
+                duration: const Duration(milliseconds: 100),
                 child: _currentPage == 0
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
                             decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
-                            child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                            child: const Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
                           ),
-                          SizedBox(height: 10),
-                          Text(
+                          const SizedBox(height: 10),
+                          const Text(
                             'Swipe to Login',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                            Container(
                                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
-                                child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                                child: const Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
                               ),
-                              SizedBox(height: 10),
-                              Text(
+                              const SizedBox(height: 10),
+                              const Text(
                                 'Swipe to Signup',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 255, 255, 255),
@@ -103,13 +105,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
-                                child: Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
+                                child: const Icon(Icons.arrow_right_rounded, color: Colors.white, size: 50),
                               ),
-                              SizedBox(height: 10),
-                              Text(
+                              const SizedBox(height: 10),
+                              const Text(
                                 'Swipe to Signup',
                                 style: TextStyle(
-                                  color: const Color.fromARGB(255, 41, 40, 40),
+                                  color: Color.fromARGB(255, 41, 40, 40),
                                   fontFamily: 'Montserrat',
                                 ),
                               ),
@@ -121,19 +123,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black, border: Border.all(color: Colors.white)),
-                                child: Icon(Icons.arrow_left_rounded, color: Colors.white, size: 50),
+                                child: const Icon(Icons.arrow_left_rounded, color: Colors.white, size: 50),
                               ),
-                              SizedBox(height: 10),
-                              Text(
+                              const SizedBox(height: 10),
+                              const Text(
                                 'Swipe to Login',
                                 style: TextStyle(
-                                  color: const Color.fromARGB(255, 41, 40, 40),
+                                  color: Color.fromARGB(255, 41, 40, 40),
                                   fontFamily: 'Montserrat',
                                 ),
                               ),
                             ],
                           )
-                                      : SizedBox.shrink(),
+                                      : const SizedBox.shrink(),
 
               ),
             ),

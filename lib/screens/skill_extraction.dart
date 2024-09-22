@@ -79,14 +79,14 @@ class SkillExtractionProvider with ChangeNotifier {
 }
 
 class SkillExtractionScreen extends StatelessWidget {
-  const SkillExtractionScreen({Key? key}) : super(key: key);
+  const SkillExtractionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Skill Extraction', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Color.fromARGB(255, 209, 157, 0),
+        title: const Text('Skill Extraction', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor: const Color.fromARGB(255, 209, 157, 0),
         elevation: 0,
       ),
       body: Padding(
@@ -96,7 +96,7 @@ class SkillExtractionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Paste Job Description', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16, color: Colors.grey[600])),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 maxLines: 5,
                 decoration: InputDecoration(
@@ -105,13 +105,13 @@ class SkillExtractionScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  contentPadding: EdgeInsets.all(16),
+                  contentPadding: const EdgeInsets.all(16),
                 ),
                 onChanged: (value) {
                   context.read<SkillExtractionProvider>().jobDescription = value;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   context.read<SkillExtractionProvider>().extractSkills();
@@ -124,14 +124,14 @@ class SkillExtractionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Text('Extract Skills', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
+                child: const Text('Extract Skills', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text('Suggested Skills', style: TextStyle(fontFamily: 'Montserrat', fontSize: 16, color: Colors.grey[600])),
               Consumer<SkillExtractionProvider>(
                 builder: (context, provider, child) {
                   if (provider.isLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (provider.skills.isEmpty) {
                     return Text('No skills extracted yet.', style: TextStyle(color: Colors.grey[600]));
                   } else {
@@ -145,7 +145,7 @@ class SkillExtractionScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: ListTile(
-                            title: Text(provider.skills[index], style: TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
+                            title: Text(provider.skills[index], style: const TextStyle(fontFamily: 'Montserrat', fontSize: 16)),
                           ),
                         );
                       },

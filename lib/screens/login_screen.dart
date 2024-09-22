@@ -32,8 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor:  Color.fromARGB(255, 209, 157, 0),),
+      appBar: AppBar(title: const Text('Login', style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor:  const Color.fromARGB(255, 209, 157, 0),),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: _login,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 47, 62, 82), // Use secondary color from the theme
+                backgroundColor: const Color.fromARGB(255, 47, 62, 82), // Use secondary color from the theme
                 textStyle: const TextStyle(fontFamily: 'Montserrat'),
               ),
               child: const Text('Login'),

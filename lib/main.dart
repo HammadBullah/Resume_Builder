@@ -23,6 +23,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -37,13 +39,13 @@ class MyApp extends StatelessWidget {
         home: SplashScreen(),
         routes: {
           '/welcome': (context) => WelcomeScreen(),
-          '/login': (context) => LoginScreen(),
-          '/signup': (context) => SignUpScreen(),
-          '/profile': (context) => ProfileScreen(),
-          '/resume_builder': (context) => ResumeFormScreen(),
-          '/skill_extraction': (context) => SkillExtractionScreen(),
-          '/interview_preparation': (context) => InterviewPreparationScreen(),
-          '/template_customization': (context) => TemplateCustomizationScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/signup': (context) => const SignUpScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/resume_builder': (context) => const ResumeFormScreen(),
+          '/skill_extraction': (context) => const SkillExtractionScreen(),
+          '/interview_preparation': (context) => const InterviewPreparationScreen(),
+          '/template_customization': (context) => const TemplateCustomizationScreen(),
           '/home': (context) => HomeScreen(),
         },
       ),

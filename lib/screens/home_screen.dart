@@ -67,6 +67,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -82,7 +83,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
       ),
     );
   }
@@ -121,6 +121,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _logoutUser(BuildContext context) {
-    _authService?.signOut(context); // Call your AuthService signOut method
+    _authService.signOut(context); // Call your AuthService signOut method
   }
 }
